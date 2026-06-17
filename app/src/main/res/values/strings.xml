@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">JobStatusTracker</string>
+
+    <string name="add_application">Add Application</string>
+    <string name="applications">Applications</string>
+
+    <string name="delete">Delete</string>
+    <string name="none">None</string>
+
+    <string name="format_range_int">Range: %1$d - %2$d</string>
 </resources>

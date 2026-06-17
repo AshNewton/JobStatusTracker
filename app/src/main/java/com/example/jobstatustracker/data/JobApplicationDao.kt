@@ -52,6 +52,7 @@ interface JobApplicationDao {
     @Query("""
     SELECT e.* FROM entries e
     INNER JOIN entries a ON e.applicationId = a.id
+    WHERE a.id = :id
     """)
     suspend fun getEntriesForApplication(id: Long): List<JobApplicationEntry>
 

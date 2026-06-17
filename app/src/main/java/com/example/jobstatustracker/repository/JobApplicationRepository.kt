@@ -5,10 +5,9 @@ import com.example.jobstatustracker.data.JobApplication
 import com.example.jobstatustracker.data.JobApplicationDao
 import com.example.jobstatustracker.data.JobApplicationEntry
 import com.example.jobstatustracker.data.SalaryType
-import java.time.YearMonth
 
 
-class TrackerRepository(
+class JobApplicationRepository(
     private val dao: JobApplicationDao
 ) {
 
