@@ -4,8 +4,21 @@
     <string name="add_application">Add Application</string>
     <string name="applications">Applications</string>
 
+    <string name="company_name">Company Name</string>
+    <string name="position_name">Position Name</string>
+    <string name="max_value">Max Value</string>
+    <string name="min_value">Min Value</string>
+    <string name="salary_type">Salary Type</string>
+
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="create">Create</string>
     <string name="delete">Delete</string>
     <string name="none">None</string>
+    <string name="range">Range</string>
+    <string name="type">Type</string>
 
     <string name="format_range_int">Range: %1$d - %2$d</string>
+    <string name="format_salary_int">Salary (%1$s): %2$d - %3$d</string>
+
 </resources>

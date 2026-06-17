@@ -25,12 +25,21 @@ fun ApplicationCard(
             .fillMaxWidth()
     ) {
         Column(Modifier.padding(8.dp)) {
-            Text(application.companyName, style = MaterialTheme.typography.titleMedium)
+            Text(application.companyName, style = MaterialTheme.typography.titleLarge)
+            Text(application.positionName, style = MaterialTheme.typography.titleSmall)
 
-            if (application.minSalaryValue != null && application.maxSalaryValue != null) {
+            if (application.minSalaryValue != null && application.maxSalaryValue == null) {
+                Text(application.minSalaryValue.toString())
+            } else if (application.minSalaryValue == null && application.maxSalaryValue != null) {
+                Text(application.maxSalaryValue.toString())
+            } else if (application.minSalaryValue == application.maxSalaryValue) {
+                Text(application.minSalaryValue.toString())
+            } else if (application.minSalaryValue != null && application.maxSalaryValue != null
+                && application.salaryType != null) {
                 Text(
                     stringResource(
-                        R.string.format_range_int,
+                        R.string.format_salary_int,
+                        application.salaryType.displayName,
                         application.minSalaryValue,
                         application.maxSalaryValue
                     )

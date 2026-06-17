@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.jobstatustracker.data.ActivityType
 import com.example.jobstatustracker.data.JobApplication
 import com.example.jobstatustracker.data.JobApplicationEntry
+import com.example.jobstatustracker.data.PositionType
 import com.example.jobstatustracker.data.SalaryType
 import com.example.jobstatustracker.repository.JobApplicationRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,13 +28,14 @@ class MainViewModel(private val applicationRepo: JobApplicationRepository) : Vie
     fun addJobApplication(
         companyName: String,
         positionName: String,
-        min: Int?,
-        max: Int?,
+        min: Int,
+        max: Int,
         salaryType: SalaryType?,
+        positionType: PositionType?,
         onResult: (Result<Unit>) -> Unit
     ) {
         viewModelScope.launch {
-            val result = applicationRepo.addJobApplication(companyName, positionName, min, max, salaryType)
+            val result = applicationRepo.addJobApplication(companyName, positionName, min, max, salaryType, positionType)
             onResult(result)
         }
     }

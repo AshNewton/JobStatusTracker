@@ -38,7 +38,11 @@ fun MainScreen(viewModel: MainViewModel) {
             )
 
             Screen.APPLICATION_DETAILS -> TODO()
-            Screen.ADD_APPLICATION -> TODO()
+            Screen.ADD_APPLICATION -> AddApplication(
+                viewModel = viewModel,
+                onCancel = { screen = Screen.LIST },
+                onDone = { screen = Screen.LIST }
+            )
             Screen.ADD_ENTRY_FOR_APPLICATION -> TODO()
         }}
 

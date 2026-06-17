@@ -4,6 +4,7 @@ import com.example.jobstatustracker.data.ActivityType
 import com.example.jobstatustracker.data.JobApplication
 import com.example.jobstatustracker.data.JobApplicationDao
 import com.example.jobstatustracker.data.JobApplicationEntry
+import com.example.jobstatustracker.data.PositionType
 import com.example.jobstatustracker.data.SalaryType
 
 
@@ -21,9 +22,10 @@ class JobApplicationRepository(
     suspend fun addJobApplication(
         companyName: String,
         positionName: String,
-        min: Int?,
-        max: Int?,
-        salaryType: SalaryType?
+        min: Int,
+        max: Int,
+        salaryType: SalaryType?,
+        positionType: PositionType?
     ): Result<Unit> {
 
         if (companyName.isBlank()) {
@@ -34,13 +36,18 @@ class JobApplicationRepository(
             return Result.failure(Exception("Position Name is required"))
         }
 
+        if (min > max) {
+            return Result.failure(Exception("Minimum salary must be lower than maximum salary"))
+        }
+
         dao.insertJobApplication(
             JobApplication(
                 companyName = companyName.trim(),
                 positionName = positionName.trim(),
                 minSalaryValue = min,
                 maxSalaryValue = max,
-                salaryType = salaryType
+                salaryType = salaryType,
+                positionType = positionType
             )
         )
 

@@ -13,4 +13,6 @@ data class JobApplication(
     val minSalaryValue: Int? = null,
     val maxSalaryValue: Int? = null,
     val salaryType: SalaryType? = null,
+
+    val positionType: PositionType? = null
 )
