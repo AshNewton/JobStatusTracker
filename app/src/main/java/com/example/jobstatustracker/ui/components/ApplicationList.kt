@@ -60,7 +60,7 @@ fun ApplicationList(
                     }
                 }
             ) {
-                ApplicationCard(application)
+                ApplicationCard(application, onSelectEntry)
             }
         }
     }

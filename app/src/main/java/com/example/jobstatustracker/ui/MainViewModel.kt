@@ -8,7 +8,11 @@ import com.example.jobstatustracker.data.JobApplicationEntry
 import com.example.jobstatustracker.data.PositionType
 import com.example.jobstatustracker.data.SalaryType
 import com.example.jobstatustracker.repository.JobApplicationRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlin.collections.emptyList
@@ -50,12 +54,6 @@ class MainViewModel(private val applicationRepo: JobApplicationRepository) : Vie
     // Entries
     // =====================================================
 
-    val entries = applicationRepo.entries.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        emptyList()
-    )
-
     fun addEntryForJobApplication(
         applicationId: Long,
         date: String,
@@ -73,6 +71,27 @@ class MainViewModel(private val applicationRepo: JobApplicationRepository) : Vie
         viewModelScope.launch {
             applicationRepo.deleteJobApplicationEntry(entry)
         }
+    }
+
+    // =====================================================
+    // Selected Application
+    // =====================================================
+    private val _applicationId = MutableStateFlow<Long?>(null)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val entries = _applicationId
+        .filterNotNull()
+        .flatMapLatest { id ->
+            applicationRepo.getEntriesByApplication(id)
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
+
+    fun setApplicationId(id: Long) {
+        _applicationId.value = id
     }
 
 }

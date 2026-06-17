@@ -36,7 +36,7 @@ import com.example.jobstatustracker.data.JobApplicationEntry
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListApplications(
+fun ListApplicationsScreen(
     viewModel: MainViewModel,
     applications: List<JobApplication>,
     entries: List<JobApplicationEntry>,

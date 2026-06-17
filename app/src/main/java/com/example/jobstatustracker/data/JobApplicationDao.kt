@@ -14,7 +14,7 @@ interface JobApplicationDao {
     suspend fun insertJobApplication(tracker: JobApplication)
 
     @Query("SELECT * FROM applications WHERE id = :id LIMIT 1")
-    fun getJobApplicationById(id: Long): JobApplication?
+    suspend fun getJobApplicationById(id: Long): JobApplication?
 
     @Query("SELECT * FROM applications")
     fun getJobApplications(): Flow<List<JobApplication>>
@@ -49,12 +49,8 @@ interface JobApplicationDao {
     """)
     suspend fun getEntriesForCompany(companyName: String): List<JobApplicationEntry>
 
-    @Query("""
-    SELECT e.* FROM entries e
-    INNER JOIN entries a ON e.applicationId = a.id
-    WHERE a.id = :id
-    """)
-    suspend fun getEntriesForApplication(id: Long): List<JobApplicationEntry>
+    @Query("SELECT * FROM entries WHERE applicationId = :id")
+    fun getEntriesForJobApplication(id: Long): Flow<List<JobApplicationEntry>>
 
     @Delete
     suspend fun deleteJobApplicationEntry(entry: JobApplicationEntry)

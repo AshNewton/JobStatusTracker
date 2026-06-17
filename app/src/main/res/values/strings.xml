@@ -2,18 +2,23 @@
     <string name="app_name">JobStatusTracker</string>
 
     <string name="add_application">Add Application</string>
+    <string name="add_entry">Add Entry</string>
+    <string name="application_details">Application Details</string>
     <string name="applications">Applications</string>
 
+    <string name="activity_type">Activity Type</string>
     <string name="company_name">Company Name</string>
     <string name="position_name">Position Name</string>
     <string name="max_value">Max Value</string>
     <string name="min_value">Min Value</string>
     <string name="salary_type">Salary Type</string>
 
+    <string name="add">Add</string>
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
     <string name="delete">Delete</string>
+    <string name="description">Description</string>
     <string name="none">None</string>
     <string name="range">Range</string>
     <string name="type">Type</string>

@@ -6,13 +6,20 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +31,8 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.getSelectedDate
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,34 +43,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.jobstatustracker.R
+import com.example.jobstatustracker.data.ActivityType
+import com.example.jobstatustracker.data.JobApplication
 import com.example.jobstatustracker.data.PositionType
 import com.example.jobstatustracker.data.SalaryType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddApplication(
+fun AddEntryScreen(
+    application: JobApplication?,
     viewModel: MainViewModel,
     onCancel: () -> Unit,
     onDone: () -> Unit
 ) {
 
-    var companyName by remember { mutableStateOf("") }
-    var positionName by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var activityType by remember { mutableStateOf(ActivityType.APPLIED) }
 
-    var salaryType by remember { mutableStateOf(SalaryType.YEARLY) }
-    var minValue by remember { mutableStateOf("0") }
-    var maxValue by remember { mutableStateOf("0") }
-
-    var positionType by remember { mutableStateOf(PositionType.INPERSON) }
+    val datePickerState = rememberDatePickerState()
 
     var error by remember { mutableStateOf<String?>(null) }
+    var expanded by remember { mutableStateOf(false) }
 
     BackHandler(onBack = onCancel)
+
+    val application = application ?: return
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.add_application)) },
+                title = { Text(stringResource(R.string.add_entry)) },
                 navigationIcon = {
                     IconButton(onClick = onCancel) {
                         Icon(
@@ -82,22 +93,21 @@ fun AddApplication(
 
                 Button(
                     onClick = {
-                        viewModel.addJobApplication(
-                            companyName,
-                            positionName,
-                            minValue.toInt(),
-                            maxValue.toInt(),
-                            salaryType,
-                            positionType,
+                        viewModel.addEntryForJobApplication(
+                            applicationId = application.id,
+                            date = datePickerState.getSelectedDate().toString(),
+                            description = description,
+                            activityType = activityType
                         ) { result ->
                             result.onSuccess {
-                                onDone() }
+                                onDone()
+                            }
                             result.onFailure { error = it.message }
                         }
                     },
-                    enabled = companyName.isNotBlank() && positionName.isNotBlank() && minValue.toInt() <= maxValue.toInt()
+                    enabled = datePickerState.getSelectedDate() != null
                 ) {
-                    Text(stringResource(R.string.create))
+                    Text(stringResource(R.string.add))
                 }
             }
         }
@@ -106,91 +116,66 @@ fun AddApplication(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            OutlinedTextField(
-                value = companyName,
-                onValueChange = { companyName = it },
-                label = { Text(stringResource(R.string.company_name)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = positionName,
-                onValueChange = { positionName = it },
-                label = { Text(stringResource(R.string.position_name)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-
             Text(
-                text = stringResource(R.string.type),
+                text = stringResource(R.string.activity_type),
                 style = MaterialTheme.typography.titleMedium
             )
-            SingleChoiceSegmentedButtonRow(
-                modifier = Modifier.fillMaxWidth()
+
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }
             ) {
-                PositionType.entries.forEachIndexed { index, p ->
-                    SegmentedButton(
-                        selected = positionType == p,
-                        onClick = { positionType = p },
-                        shape = SegmentedButtonDefaults.itemShape(
-                            index = index,
-                            count = PositionType.entries.size
-                        ),
-                    ) {
-                        Text(p.displayName)
+                OutlinedTextField(
+                    value = activityType.displayName,
+                    onValueChange = {},
+                    readOnly = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(),
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    }
+                )
+
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    ActivityType.entries.forEach { type ->
+                        DropdownMenuItem(
+                            text = { Text(type.displayName) },
+                            onClick = {
+                                activityType = type
+                                expanded = false
+                            }
+                        )
                     }
                 }
             }
 
-            Text(
-                text = stringResource(R.string.salary_type),
-                style = MaterialTheme.typography.titleMedium
-            )
-            SingleChoiceSegmentedButtonRow(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                SalaryType.entries.forEachIndexed { index, s ->
-                    SegmentedButton(
-                        selected = salaryType == s,
-                        onClick = { salaryType = s },
-                        shape = SegmentedButtonDefaults.itemShape(
-                            index = index,
-                            count = SalaryType.entries.size
-                        ),
-                    ) {
-                        Text(s.displayName)
-                    }
-                }
-            }
-
+            Spacer(Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.range),
+                text = stringResource(R.string.description),
                 style = MaterialTheme.typography.titleMedium
             )
+
             OutlinedTextField(
-                value = minValue,
-                onValueChange = { minValue = it },
-                label = { Text(stringResource(R.string.min_value)) },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number
-                ),
+                value = description,
+                onValueChange = { description = it },
+                label = { Text(stringResource(R.string.description)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
-            OutlinedTextField(
-                value = maxValue,
-                onValueChange = { maxValue = it },
-                label = { Text(stringResource(R.string.max_value)) },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number
-                ),
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+
+            Spacer(Modifier.height(8.dp))
+
+            DatePicker(
+                state = datePickerState
             )
 
             if (error != null) {

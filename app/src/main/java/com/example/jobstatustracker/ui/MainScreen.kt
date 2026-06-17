@@ -12,7 +12,7 @@ fun MainScreen(viewModel: MainViewModel) {
     val entries by viewModel.entries.collectAsState()
 
     var screen by remember { mutableStateOf(Screen.LIST) }
-    var selectedEntry by remember { mutableStateOf<JobApplication?>(null) }
+    var selectedApplication by remember { mutableStateOf<JobApplication?>(null) }
 
     Column(
         modifier = Modifier
@@ -20,30 +20,39 @@ fun MainScreen(viewModel: MainViewModel) {
             .statusBarsPadding()
     ){
         when (screen) {
-            Screen.LIST -> ListApplications(
+            Screen.LIST -> ListApplicationsScreen(
                 viewModel = viewModel,
                 applications = jobApplications,
                 entries = entries,
                 onAddApplication = {
-                    selectedEntry = null
+                    selectedApplication = null
                     screen = Screen.ADD_APPLICATION
                 },
                 onDeleteApplication = {
-                    selectedEntry = null
+                    selectedApplication = null
                 },
                 onSelectEntry = {
-                    selectedEntry = it
+                    selectedApplication = it
                     screen = Screen.APPLICATION_DETAILS
                 }
             )
-
-            Screen.APPLICATION_DETAILS -> TODO()
-            Screen.ADD_APPLICATION -> AddApplication(
+            Screen.APPLICATION_DETAILS -> ApplicationDetailsScreen(
+                application = selectedApplication,
+                viewModel = viewModel,
+                onBack = { screen = Screen.LIST },
+                onAddEntry = {screen = Screen.ADD_ENTRY_FOR_APPLICATION}
+            )
+            Screen.ADD_APPLICATION -> AddApplicationScreen(
                 viewModel = viewModel,
                 onCancel = { screen = Screen.LIST },
                 onDone = { screen = Screen.LIST }
             )
-            Screen.ADD_ENTRY_FOR_APPLICATION -> TODO()
+            Screen.ADD_ENTRY_FOR_APPLICATION -> AddEntryScreen(
+                application = selectedApplication,
+                viewModel = viewModel,
+                onCancel = { screen = Screen.APPLICATION_DETAILS },
+                onDone = { screen = Screen.APPLICATION_DETAILS }
+            )
         }}
 
 

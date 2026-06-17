@@ -6,6 +6,7 @@ import com.example.jobstatustracker.data.JobApplicationDao
 import com.example.jobstatustracker.data.JobApplicationEntry
 import com.example.jobstatustracker.data.PositionType
 import com.example.jobstatustracker.data.SalaryType
+import kotlinx.coroutines.flow.Flow
 
 
 class JobApplicationRepository(
@@ -92,8 +93,8 @@ class JobApplicationRepository(
         return dao.getEntriesForType(activityType)
     }
 
-    suspend fun getEntriesByApplication(id: Long): List<JobApplicationEntry> {
-        return dao.getEntriesForApplication(id)
+    suspend fun getEntriesByApplication(id: Long): Flow<List<JobApplicationEntry>> {
+        return dao.getEntriesForJobApplication(id)
     }
 
     suspend fun getEntriesByCompany(company: String): List<JobApplicationEntry> {

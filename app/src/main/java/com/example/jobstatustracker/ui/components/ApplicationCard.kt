@@ -1,5 +1,6 @@
 package com.example.jobstatustracker.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,13 +17,15 @@ import com.example.jobstatustracker.data.JobApplication
 @Composable
 fun ApplicationCard(
     application: JobApplication,
+    onSelectEntry: (JobApplication?) -> Unit
     ) {
-
-
     Card(
         modifier = Modifier
             .padding(12.dp)
             .fillMaxWidth()
+            .clickable {
+                onSelectEntry(application)
+            }
     ) {
         Column(Modifier.padding(8.dp)) {
             Text(application.companyName, style = MaterialTheme.typography.titleLarge)
