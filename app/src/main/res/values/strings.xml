@@ -12,6 +12,7 @@
     <string name="max_value">Max Value</string>
     <string name="min_value">Min Value</string>
     <string name="salary_type">Salary Type</string>
+    <string name="select_company">Select Company</string>
 
     <string name="add">Add</string>
     <string name="back">Back</string>

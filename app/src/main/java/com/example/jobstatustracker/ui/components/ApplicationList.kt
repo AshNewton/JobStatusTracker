@@ -22,13 +22,10 @@ import com.example.jobstatustracker.ui.MainViewModel
 @Composable
 fun ApplicationList(
     viewModel: MainViewModel,
-    selectedApplicationId: Long?,
     applications: List<JobApplication>,
     entries: List<JobApplicationEntry>,
     onSelectEntry: (JobApplication?) -> Unit
 ) {
-    val application = applications.firstOrNull { it.id == selectedApplicationId }
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()

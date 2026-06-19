@@ -41,10 +41,9 @@ fun ListApplicationsScreen(
     applications: List<JobApplication>,
     entries: List<JobApplicationEntry>,
     onAddApplication: () -> Unit,
-    onDeleteApplication: () -> Unit,
     onSelectEntry: (JobApplication?) -> Unit
 ) {
-    var selectedApplicationId by remember { mutableStateOf<Long?>(null) }
+    var selectedCompanyName by remember { mutableStateOf<String?>(null) }
     var dropdownExpanded by remember { mutableStateOf(false) }
 
     val activity = LocalActivity.current
@@ -89,8 +88,7 @@ fun ListApplicationsScreen(
                             .padding(horizontal = 16.dp)
                     ) {
                         OutlinedTextField(
-                            value = applications.firstOrNull { it.id == selectedApplicationId }?.companyName
-                                ?: "Select Company",
+                            value = selectedCompanyName ?: "Select Company",
                             onValueChange = {},
                             readOnly = true,
                             modifier = Modifier.menuAnchor().fillMaxWidth(),
@@ -106,7 +104,7 @@ fun ListApplicationsScreen(
                             DropdownMenuItem(
                                 text = { Text(stringResource(R.string.none)) },
                                 onClick = {
-                                    selectedApplicationId = null
+                                    selectedCompanyName = null
                                     dropdownExpanded = false
                                 }
                             )
@@ -114,7 +112,7 @@ fun ListApplicationsScreen(
                                 DropdownMenuItem(
                                     text = { Text(application.companyName) },
                                     onClick = {
-                                        selectedApplicationId = application.id
+                                        selectedCompanyName = application.companyName
                                         dropdownExpanded = false
                                     }
                                 )
@@ -126,8 +124,9 @@ fun ListApplicationsScreen(
 
                     ApplicationList(
                         viewModel = viewModel,
-                        selectedApplicationId = selectedApplicationId,
-                        applications = applications.reversed(),
+                        applications = applications.filter {
+                            selectedCompanyName == null || it.companyName.equals(selectedCompanyName, ignoreCase = true)
+                        }.reversed(),
                         entries = entries,
                         onSelectEntry = onSelectEntry,
                     )

@@ -28,9 +28,6 @@ fun MainScreen(viewModel: MainViewModel) {
                     selectedApplication = null
                     screen = Screen.ADD_APPLICATION
                 },
-                onDeleteApplication = {
-                    selectedApplication = null
-                },
                 onSelectEntry = {
                     selectedApplication = it
                     screen = Screen.APPLICATION_DETAILS
