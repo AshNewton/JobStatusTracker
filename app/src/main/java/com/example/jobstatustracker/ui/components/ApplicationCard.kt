@@ -48,6 +48,10 @@ fun ApplicationCard(
                     )
                 )
             }
+
+            if (application.positionType != null) {
+                Text(application.positionType.displayName)
+            }
         }
     }
 

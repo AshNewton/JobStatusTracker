@@ -35,7 +35,7 @@ class MainViewModel(private val applicationRepo: JobApplicationRepository) : Vie
         min: Int,
         max: Int,
         salaryType: SalaryType?,
-        positionType: PositionType?,
+        positionType: PositionType,
         onResult: (Result<Unit>) -> Unit
     ) {
         viewModelScope.launch {

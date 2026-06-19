@@ -26,7 +26,7 @@ class JobApplicationRepository(
         min: Int,
         max: Int,
         salaryType: SalaryType?,
-        positionType: PositionType?
+        positionType: PositionType
     ): Result<Unit> {
 
         if (companyName.isBlank()) {
