@@ -25,10 +25,9 @@ fun ApplicationList(
     selectedApplicationId: Long?,
     applications: List<JobApplication>,
     entries: List<JobApplicationEntry>,
-    onDeleteApplication: () -> Unit,
     onSelectEntry: (JobApplication?) -> Unit
 ) {
-    val tracker = applications.firstOrNull { it.id == selectedApplicationId }
+    val application = applications.firstOrNull { it.id == selectedApplicationId }
 
     LazyColumn(
         modifier = Modifier

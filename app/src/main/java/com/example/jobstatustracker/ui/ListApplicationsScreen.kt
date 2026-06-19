@@ -127,9 +127,8 @@ fun ListApplicationsScreen(
                     ApplicationList(
                         viewModel = viewModel,
                         selectedApplicationId = selectedApplicationId,
-                        applications = applications,
+                        applications = applications.reversed(),
                         entries = entries,
-                        onDeleteApplication = onDeleteApplication,
                         onSelectEntry = onSelectEntry,
                     )
                 }
