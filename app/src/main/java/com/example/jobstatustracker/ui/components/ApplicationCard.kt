@@ -19,6 +19,11 @@ fun ApplicationCard(
     application: JobApplication,
     onSelectEntry: (JobApplication?) -> Unit
     ) {
+
+    fun salarySpecified(value: Int?): Boolean {
+        return value != null && value > 0
+    }
+
     Card(
         modifier = Modifier
             .padding(12.dp)
@@ -31,22 +36,34 @@ fun ApplicationCard(
             Text(application.companyName, style = MaterialTheme.typography.titleLarge)
             Text(application.positionName, style = MaterialTheme.typography.titleSmall)
 
-            if (application.minSalaryValue != null && application.maxSalaryValue == null) {
-                Text(application.minSalaryValue.toString())
-            } else if (application.minSalaryValue == null && application.maxSalaryValue != null) {
-                Text(application.maxSalaryValue.toString())
-            } else if (application.minSalaryValue == application.maxSalaryValue) {
-                Text(application.minSalaryValue.toString())
-            } else if (application.minSalaryValue != null && application.maxSalaryValue != null
-                && application.salaryType != null) {
-                Text(
-                    stringResource(
-                        R.string.format_salary_int,
-                        application.salaryType.displayName,
-                        application.minSalaryValue,
-                        application.maxSalaryValue
+            if (application.salaryType != null) {
+                if (salarySpecified(application.minSalaryValue) && !salarySpecified(application.maxSalaryValue)) {
+                    Text(
+                        stringResource(
+                            R.string.format_salary_int,
+                            application.salaryType.displayName,
+                            application.minSalaryValue!!,
+                        )
                     )
-                )
+                } else if (salarySpecified(application.maxSalaryValue) && (!salarySpecified(application.minSalaryValue) ||
+                    application.minSalaryValue == application.maxSalaryValue)) {
+                    Text(
+                        stringResource(
+                            R.string.format_salary_int,
+                            application.salaryType.displayName,
+                            application.maxSalaryValue!!,
+                        )
+                    )
+                } else if (salarySpecified(application.minSalaryValue)  && salarySpecified(application.maxSalaryValue) ) {
+                    Text(
+                        stringResource(
+                            R.string.format_salary_range_int,
+                            application.salaryType.displayName,
+                            application.minSalaryValue!!,
+                            application.maxSalaryValue!!
+                        )
+                    )
+                }
             }
 
             if (application.positionType != null) {
