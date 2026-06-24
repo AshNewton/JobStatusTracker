@@ -33,6 +33,8 @@ import com.example.jobstatustracker.ui.components.ApplicationList
 import com.example.jobstatustracker.R
 import com.example.jobstatustracker.data.JobApplication
 import com.example.jobstatustracker.data.JobApplicationEntry
+import java.util.Locale
+import java.util.Locale.getDefault
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +49,8 @@ fun ListApplicationsScreen(
     var dropdownExpanded by remember { mutableStateOf(false) }
 
     val activity = LocalActivity.current
+
+    val companyNames = applications.map { it.companyName }.toSet().toList().sortedBy{it}
 
     BackHandler {
         activity?.moveTaskToBack(true)
@@ -108,11 +112,11 @@ fun ListApplicationsScreen(
                                     dropdownExpanded = false
                                 }
                             )
-                            applications.forEach { application ->
+                            companyNames.forEach {
                                 DropdownMenuItem(
-                                    text = { Text(application.companyName) },
+                                    text = { Text(it) },
                                     onClick = {
-                                        selectedCompanyName = application.companyName
+                                        selectedCompanyName = it
                                         dropdownExpanded = false
                                     }
                                 )
